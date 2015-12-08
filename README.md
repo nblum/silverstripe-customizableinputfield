@@ -17,6 +17,9 @@ Creates a field like this:
 +49 (0) ___ / _________
 
 ```php
+  //creates a new fieldset
+  $field = new CustomizableInputField('Field1', 'Mobile Phone');
+        
   //creates a new part
   $part1 = new CustomizableInputFieldPart();
   $part1->setBefore('+49 (0)');
