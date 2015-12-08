@@ -1,0 +1,26 @@
+{
+  "name": "nblum/silverstripe-customizableinputfield",
+  "description": "SilverStripe form field for customizable input formats",
+  "license": "MIT",
+  "type": "silverstripe-module",
+  "keywords": [
+    "silverstripe",
+    "input",
+    "customizable",
+    "phone number",
+    "email",
+    "prefix",
+    "postfix"
+  ],
+  "authors": [
+    {
+      "name": "Nico Blum",
+      "email": "github@blum-nico.de",
+      "homepage": "",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "silverstripe/framework": "3.*"
+  }
+}
