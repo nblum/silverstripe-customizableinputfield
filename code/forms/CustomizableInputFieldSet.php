@@ -7,9 +7,14 @@ class CustomizableInputFieldSet extends TextField
 {
 
     /**
+     * @var string
+     */
+    protected $rawValue = '';
+
+    /**
      * @var TextField[]
      */
-    protected $parts = [];
+    protected $parts = array();
 
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
@@ -24,14 +29,15 @@ class CustomizableInputFieldSet extends TextField
     }
 
     /**
-     * @return CustomizableInputField
+     * @return FormField
      */
-    public function addPart(CustomizableInputFieldPart $part)
+    public function addPart(FormField $part)
     {
-        if (empty($part->getName())) {
+        if (strval($part->getName()) === '') {
             $part->setName(sprintf('%s-%s', $this->getName(), count($this->parts)));
         }
         $part->setAttribute('data-part', count($this->parts));
+
         $this->parts[] = $part;
         return $this;
     }
@@ -40,9 +46,19 @@ class CustomizableInputFieldSet extends TextField
     {
         Requirements::css('silverstripe-customizableinputfield/css/customizable-input.css');
         Requirements::javascript('silverstripe-customizableinputfield/javascript/customizable-input.js');
-
         return parent::Field($properties);
     }
+
+    /**
+     * forces concatenated output
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        return parent::setValue($value);
+    }
+
 
     /**
      * returns the parts with filled values
@@ -50,52 +66,18 @@ class CustomizableInputFieldSet extends TextField
      */
     public function getParts()
     {
-        $partValues = json_decode($this->getAttribute('value'));
+        $partValues = json_decode($this->value);
 
         /* @var $part CustomizableInputFieldPart */
         foreach ($this->parts as $key => $part) {
             if (!isset($partValues[$key])) {
                 continue;
             }
+            $part->setValue($partValues[$key]->val);
             $part->setAttribute('value', $partValues[$key]->val);
         }
 
         return new ArrayList($this->parts);
     }
-
-
-    /* public function Value() {
-         return 'val';
-     }
-
-     public function getValue() {
-         return 'val';
-     }
-
-     public function Bla() {
-         return 'bla1';
-     }
-
-     public function getBla() {
-         return 'bla2';
-     }
-
-     public function Items() {
-         return $this->forTemplate();
-     }
-
-     public function forTemplate() {
-         return json_decode($this->value);
-     }*/
-
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    /*public function setValue($value) {
-        $this->parts =
-        parent::setValue($value);
-        //return parent::setValue(json_decode($value));
-    }*/
 }
 

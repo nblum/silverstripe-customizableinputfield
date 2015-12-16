@@ -16,6 +16,18 @@
                     });
 
                     $(this).on('change', function () {
+                        $(this).val(me.cleanUpString($(this).val(), $(this).data('allowedsigns')));
+                        me.updateValue(id);
+                    });
+                }
+            });
+
+            $('.customizable-input select[data-part]').entwine({
+                onmatch: function () {
+                    var id = '#' + $(this).parents('.customizable-input').first().attr('id');
+
+                    $(this).on('change', function () {
+
                         me.updateValue(id);
                     });
                 }
@@ -29,17 +41,17 @@
                 var result = [],
                     $item;
 
-                $(id + ' input[data-part]').each(function (index, item) {
+                $(id + ' [data-part]').each(function (index, item) {
                     $item = $(item);
                     $before = $item.parent().prev();
                     $after = $item.parent().next();
-                    console.log($before, $after);
 
                     result[index] = {
                         name: $item.attr('name'),
                         val: $item.val(),
                         before: $before.attr('data-val'),
-                        after: $after.attr('data-val')
+                        after: $after.attr('data-val'),
+                        whitespaces: $item.attr('data-whitespaces')
                     }
                 });
 
@@ -61,6 +73,7 @@
 
                 //console.log(code);
 
+                //backspace
                 if (code === 8 && !!$prev) {
                     if (me.getCursorPosition($input[0]) === 0) {
                         $prev.focus();
@@ -78,6 +91,7 @@
             this.handleKeysUp = function (id, $input, code) {
                 var part = parseInt($input.attr('data-part')),
                     val = $input.val(),
+                    allowedSigns = $input.attr('data-allowedsigns'),
                     max = parseInt($input.attr('maxlength')),
                     $prev = $(id + ' input[data-part="' + (part - 1) + '"]'),
                     $next = $(id + ' input[data-part="' + (part + 1) + '"]');
@@ -86,6 +100,10 @@
                     return;
                 }
 
+                val = this.cleanUpString(val, allowedSigns);
+                $input.val(val);
+
+                //left
                 if (code === 37 && !!$prev) {
                     if (me.getCursorPosition($input[0]) === 0) {
                         $prev.focus();
@@ -93,6 +111,7 @@
                     return;
                 }
 
+                //right
                 if (code === 39 && !!$next) {
                     if (me.getCursorPosition($input[0]) === val.length) {
                         $next.focus();
@@ -100,8 +119,16 @@
                     return;
                 }
 
-                this.autoPrevField($prev, val);
+                //this.autoPrevField($prev, val);
                 this.autoNextField($next, max, val);
+            };
+
+            /**
+             * removes unwanted signs
+             */
+            this.cleanUpString = function (val, allowedSigns) {
+                var regexp = new RegExp(allowedSigns, 'gi');
+                return val.replace(regexp, '');
             };
 
             /**

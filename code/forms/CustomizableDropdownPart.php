@@ -3,7 +3,7 @@
 /**
  * Color field
  */
-class CustomizableInputFieldPart extends TextField
+class CustomizableDropdownPart extends DropdownField
 {
 
     /**
@@ -31,19 +31,12 @@ class CustomizableInputFieldPart extends TextField
      */
     protected $whitespaces = 1;
 
-    /**
-     * @var string
-     */
-    protected $allowedSigns = '';
 
-
-    public function __construct($name = '', $title = null, $value = '', $maxLength = null, $form = null)
+    public function __construct($name = '', $title=null, $source=array(), $value='', $form=null, $emptyString=null)
     {
-        parent::__construct($name, $title, $value, $maxLength, $form);
+        parent::__construct($name, $title, $source, $value, $form, $emptyString);
 
-        $this->setAttribute('class', 'text');
-        $this->setAttribute('type', 'text');
-        $this->setAttribute('data-type', 'input');
+        $this->setAttribute('data-type', 'dropdown');
     }
 
     /**
@@ -105,11 +98,32 @@ class CustomizableInputFieldPart extends TextField
     }
 
     /**
-     * @param string $allowedSigns
+     *
      */
-    public function setAllowedSigns($allowedSigns)
+    public function Selected()
     {
-        $this->allowedSigns = $allowedSigns;
+        return $this->Value();
+    }
+
+    /**
+     * Gets the source array including any empty default values.
+     *
+     * @return array|ArrayAccess
+     */
+    public function Options() {
+
+        $options = $this->getSource();
+        $items = array();
+        if ($options) {
+            foreach ($options as $value => $title) {
+                $obj = new ArrayData(array(
+                    'Title' => $title,
+                    'Value' => $value
+                ));
+                $items[] = $obj;
+            }
+        }
+        return new ArrayList($items);
     }
 
 }

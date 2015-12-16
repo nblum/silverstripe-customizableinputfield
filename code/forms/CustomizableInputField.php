@@ -4,14 +4,30 @@
 class CustomizableInputField extends Text
 {
 
+    /**
+     * @return string
+     */
+    public function forTemplate() {
+        return self::Strval($this->value);
+    }
 
-    public function Strval()
+    public static function Strval($value = '')
     {
-        $parts = json_decode($this->value);
         $strval = '';
 
+        if(empty($value)) {
+            return $value;
+        }
+
+        $parts = json_decode($value);
+
+        if(empty($parts)) {
+            return $strval;
+        }
+
         foreach ($parts as $part) {
-            $strval .= $part->val;
+            $whitespace = (int) $part->whitespaces === 1 ? ' ' : '';
+            $strval .= $part->before . $whitespace . $part->val . $whitespace . $part->after;
         }
 
         return $strval;
@@ -24,11 +40,11 @@ class CustomizableInputField extends Text
         $items = array();
         if ($parts) {
             foreach ($parts as $key => $item) {
-                $obj = new ArrayData([
+                $obj = new ArrayData(array(
                     'Value' => $item->val,
                     'Before' => $item->before,
                     'After' => $item->after
-                ]);
+                ));
                 $items[] = $obj;
             }
         }

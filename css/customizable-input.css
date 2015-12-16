@@ -46,3 +46,13 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+.customizabledropdownpart {
+    height: 30px;
+    background: #fff;
+    border: none;
+}
+
+.customizabledropdownpart:focus {
+    outline: none;
+}
