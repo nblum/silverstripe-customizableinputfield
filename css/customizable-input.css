@@ -47,12 +47,13 @@
     box-shadow: none;
 }
 
-.customizabledropdownpart {
+.field select.customizabledropdownpart {
     height: 30px;
     background: #fff;
     border: none;
+    margin: 0;
 }
 
-.customizabledropdownpart:focus {
+.field select.customizabledropdownpart:focus {
     outline: none;
 }

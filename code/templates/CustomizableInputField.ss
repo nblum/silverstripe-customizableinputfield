@@ -4,11 +4,11 @@
     <div class="field-set">
         <% loop $Parts %>
             <div class="field-part">
-                <span class="before" data-val="$beforeVal">$before</span>
+                <% if $beforeVal %>
+                    <span class="before" data-val="$beforeVal">$before</span>
+                <% end_if %>
                 <% if $type == 'customizabledropdownpart' %>
-
                     <select $AttributesHTML>
-
                         <% loop $Options %>
                             <option value="$Value"<% if $Up.Selected = $Value %>
                                     selected="selected"<% end_if %><% if $Disabled %>
@@ -19,7 +19,9 @@
                     <span class="val"><input $AttributesHTML data-whitespaces="$whitespaces"
                                                              data-allowedsigns="$allowedSigns"/></span>
                 <% end_if %>
-                <span class="after" data-val="$afterVal">$after</span>
+                <% if $afterVal %>
+                    <span class="after" data-val="$afterVal">$after</span>
+                <% end_if %>
             </div>
         <% end_loop %>
     </div>
