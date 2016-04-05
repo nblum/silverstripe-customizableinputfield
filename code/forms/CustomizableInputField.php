@@ -29,12 +29,12 @@ class CustomizableInputField extends Text
         }
 
         foreach ($parts as $part) {
-            if(!empty(trim($part))) {
-                return true;
+            if(!empty(trim($part->val))) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
