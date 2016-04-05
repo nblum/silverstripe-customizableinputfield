@@ -57,3 +57,7 @@
 .field select.customizabledropdownpart:focus {
     outline: none;
 }
+
+.field.nolabel .customizableinputfieldset .middleColumn {
+    margin-left: 184px;
+}
