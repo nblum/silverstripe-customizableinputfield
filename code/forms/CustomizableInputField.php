@@ -12,6 +12,17 @@ class CustomizableInputField extends Text
     }
 
     /**
+     * returns given part value to template
+     * @example $Var.Part(1)
+     * @return bool
+     */
+    public function Part($number = 0)
+    {
+        $parts = json_decode($this->value);
+        return $parts[$number]->val;
+    }
+
+    /**
      * checkes whether at least one part is not empty
      * @return bool
      */
