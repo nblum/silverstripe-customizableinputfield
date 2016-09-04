@@ -7,7 +7,8 @@ class CustomizableInputField extends Text
     /**
      * @return string
      */
-    public function forTemplate() {
+    public function forTemplate()
+    {
         return self::Strval($this->value);
     }
 
@@ -31,16 +32,20 @@ class CustomizableInputField extends Text
         return !$this::isEmpty($this->value);
     }
 
+    /**
+     * @param $field
+     * @return bool
+     */
     public static function isEmpty($field)
     {
         $parts = json_decode($field);
 
-        if(empty($parts)) {
+        if (empty($parts)) {
             return true;
         }
 
         foreach ($parts as $part) {
-            if(!empty(trim($part->val))) {
+            if (!empty(trim($part->val))) {
                 return false;
             }
         }
@@ -51,17 +56,20 @@ class CustomizableInputField extends Text
     /**
      * @return string
      */
-    public function Val() {
+    public function Val()
+    {
         $parts = json_decode($this->value);
         $first = array_shift($parts);
         return $first->val;
     }
 
     /**
-     * @return string
+     * @param array $selectedParts parts to convert to float eg [1,3]
+     * @return float
      */
-    public function Float() {
-        return floatval(preg_replace('/,/', '.',self::Strval($this->value)));
+    public function Float($selectedParts = [])
+    {
+        return floatval(preg_replace('/,/', '.', self::Strval($this->value, $selectedParts)));
     }
 
     /**
@@ -69,33 +77,69 @@ class CustomizableInputField extends Text
      * use setlocale(LC_MONETARY, 'de_DE.utf8'); in your config file for correct format
      * @return string
      */
-    public function Money() {
-        return money_format('%+n', $this->Float());
+    public function Money()
+    {
+        $args = func_get_args();
+        return money_format('%+n', $this->Float($args));
+    }
+
+    /**
+     * formats the float value as currency
+     * use setlocale(LC_MONETARY, 'de_DE.utf8'); in your config file for correct format
+     * @return string
+     */
+    public function Phone()
+    {
+        return self::formatPhone($this->value);
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public static function formatPhone($value)
+    {
+        $parts = json_decode($value);
+        $number = preg_replace('/([0-9]{2})/', '$0 ', $parts[1]->val);
+        return sprintf('+49 (0) %s / %s', $parts[0]->val, $number);
     }
 
 
-    public static function Strval($value = '')
+    /**
+     * @param string $value
+     * @param array $selectedParts array of parts to output [1,3]
+     * @return string
+     */
+    public static function Strval($value = '', $selectedParts = [])
     {
         $strval = '';
 
-        if(empty($value)) {
+        if (empty($value)) {
             return $value;
         }
 
         $parts = json_decode($value);
 
-        if(empty($parts)) {
+        if (empty($parts)) {
             return $strval;
         }
 
-        foreach ($parts as $part) {
-            $whitespace = (int) $part->whitespaces === 1 ? ' ' : '';
-            $strval .= $part->before . $whitespace . $part->val . $whitespace . $part->after;
+        if (!empty($selectedParts)) {
+            $selectedParts = array_map('intval', $selectedParts);
         }
 
+        foreach ($parts as $key => $part) {
+            if (empty($selectedParts) || (!empty($selectedParts) && in_array($key, $selectedParts))) {
+                $whitespace = (int)$part->whitespaces === 1 ? ' ' : '';
+                $strval .= $part->before . $whitespace . $part->val . $whitespace . $part->after;
+            }
+        }
         return $strval;
     }
 
+    /**
+     * @return ArrayList
+     */
     public function Parts()
     {
         $parts = json_decode($this->value);
