@@ -26,8 +26,10 @@
                 onmatch: function () {
                     var id = '#' + $(this).parents('.customizable-input').first().attr('id');
 
+                    //update on page load to force updates on code change
+                    me.updateValue(id);
+                    
                     $(this).on('change', function () {
-
                         me.updateValue(id);
                     });
                 }
