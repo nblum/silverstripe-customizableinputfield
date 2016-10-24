@@ -1,4 +1,7 @@
 # silverstripe-customizableinputfield
+***
+This package is deprecated. There will be no features or bug fixes in future.
+***
 
 ## Requirements
 * Silverstripe 3.*
