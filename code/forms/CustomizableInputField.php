@@ -20,7 +20,7 @@ class CustomizableInputField extends Text
     public function Part($number = 0)
     {
         $parts = json_decode($this->value);
-        return $parts[$number]->val;
+        return isset($parts[$number]) ? $parts[$number]->val : null;
     }
 
     /**
